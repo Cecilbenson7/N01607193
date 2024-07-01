@@ -1,0 +1,39 @@
+<h1>Gallery with Pagination</h1>
+<div id="image-container"></div>
+<div id="pagination"></div>
+
+<script>
+  let currentPage = 1;
+  const ITEMS_PER_PAGE = 10;
+
+  function fetchImages(page) {
+    fetch(`/fetch-all-pagination/pages/${page}?items_per_page=${ITEMS_PER_PAGE}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const imageContainer = document.getElementById("image-container");
+        const pagination = document.getElementById("pagination");
+        imageContainer.innerHTML = "";
+        pagination.innerHTML = "";
+
+        data.files.forEach((image) => {
+          const img = document.createElement("img");
+          img.src = image;
+          img.width = 200;
+          imageContainer.appendChild(img);
+        });
+
+        for (let i = 1; i <= data.totalPages; i++) {
+          const pageLink = document.createElement("a");
+          pageLink.href = "#";
+          pageLink.innerText = i;
+          pageLink.onclick = () => {
+            fetchImages(i);
+          };
+          pagination.appendChild(pageLink);
+        }
+      })
+      .catch((error) => console.error("Error fetching images:", error));
+  }
+
+  fetchImages(currentPage);
+</script>

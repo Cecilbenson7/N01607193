@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fetch Multiple Images</title>
+  </head>
+  <body>
+    <h1>Fetch Multiple Images</h1>
+    <form id="fetch-form">
+      <label for="num">Number of images to fetch:</label>
+      <input type="number" id="num" name="num" min="1" value="5" />
+      <button type="submit">Fetch Images</button>
+    </form>
+    <div id="image-container"></div>
+
+    <script>
+      document.getElementById("fetch-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const num = document.getElementById("num").value;
+        fetch(`/fetch-multiple?num=${num}`)
+          .then((response) => response.json())
+          .then((images) => {
+            const imageContainer = document.getElementById("image-container");
+            imageContainer.innerHTML = "";
+            images.forEach((image) => {
+              const img = document.createElement("img");
+              img.src = image;
+              img.width = 200;
+              imageContainer.appendChild(img);
+            });
+          })
+          .catch((error) => console.error("Error fetching images:", error));
+      });
+    </script>
+  </body>
+</html>
